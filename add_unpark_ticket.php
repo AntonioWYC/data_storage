@@ -28,7 +28,7 @@ if ($ticket_opt === "add"){
     $sql="insert into unpark_tickets(ticket_number,ticket_type,linkcase) values ('".$opt_v."','".$opt_type."','".$opt_linkcase."')";
     if ($opt_v != "0")
     {
-        if (mysqli_query($con,$sql)) {
+        if (mysqli_query($conn,$sql)) {
             echo "New record *".$opt_v."* created successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -39,7 +39,7 @@ if ($ticket_opt === "add"){
 #Delete ticket from DB
 if ($ticket_opt === "delete"){
     $sql="DELETE FROM `park_ticket`.`unpark_tickets` WHERE (`id` = '".$opt_v."')";
-    if (mysqli_query($con,$sql)) {
+    if (mysqli_query($conn,$sql)) {
         echo  "Record *".$opt_v."* deleted successfully";
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
@@ -52,7 +52,7 @@ if ($ticket_opt === "updateticket"){
     $sql="update unpark_tickets set ticket_number = '".$ticket."'  where id = ".$opt_id."";
     if ($ticket_add != "0")
     {
-        if (mysqli_query($con,$sql)) {
+        if (mysqli_query($conn,$sql)) {
             echo "Record updated to ".$ticket." successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -65,7 +65,7 @@ if ($ticket_opt === "updatetype"){
     $sql="update unpark_tickets set linkcase = '".$status."'  where id = ".$opt_id."";
     if ($ticket_add != "0")
     {
-        if (mysqli_query($con,$sql)) {
+        if (mysqli_query($conn,$sql)) {
             echo "Record updated to ".$status." successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -79,7 +79,7 @@ if ($ticket_opt === "editdes"){
     $sql="update unpark_tickets set des = '".$des."'  where id = ".$opt_id."";
     if ($ticket_add != "0")
     {
-        if (!mysqli_query($con,$sql)) {
+        if (!mysqli_query($conn,$sql)) {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
     }
@@ -92,7 +92,7 @@ if ($ticket_opt === "changetype"){
     $sql="update unpark_tickets set ticket_type = '".$select_value."'  where id = ".$opt_id."";
     if ($ticket_add != "0")
     {
-        if (!mysqli_query($con,$sql)) {
+        if (!mysqli_query($conn,$sql)) {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
     }
@@ -106,7 +106,7 @@ if ($ticket_opt === "entry"){
 }
 
 $sql="SELECT * FROM unpark_tickets";
-$result = mysqli_query($con,$sql);
+$result = mysqli_query($conn,$sql);
 echo "<table class=\"table table-bordered table-hover\" style='width:1000px'>
 <thead class='thead-light'>
     <tr>

@@ -20,6 +20,7 @@ function arithmetic($timeStamp,$randomStr){
         $str = implode($arr);
         //进行加密
         #$signature = sha1($str);
+        global $signature;
         $signature = md5($signature);
         //转换成大写
         $signature = strtoupper($signature);
@@ -27,6 +28,7 @@ function arithmetic($timeStamp,$randomStr){
     }
 
 function lang($key){
+    global $randomStr;
     $randomstr = createNonceStr();
     $timeStamp = time();
         $lang = array (

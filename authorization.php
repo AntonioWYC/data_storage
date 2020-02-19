@@ -26,6 +26,7 @@
         $str = implode($arr);
         //进行加密
         #$signature = sha1($str);
+        global $signature;
         $signature = md5($signature);
         //转换成大写
         $signature = strtoupper($signature);
