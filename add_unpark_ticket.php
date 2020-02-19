@@ -19,10 +19,20 @@ th {text-align: left;}
 include 'connect_db.php';
 include 'response.php';
 $ticket_opt = $_GET["opt"];
+
+isset($_GET["q"])?:$_GET["q"]="";
 $opt_v = $_GET["q"];
+
+isset($_GET["t"])?:$_GET["t"]="";
 $opt_type = $_GET["t"];
+
+isset($_GET["lc"])?:$_GET["lc"]="";
 $opt_linkcase = $_GET["lc"];
+
+isset($_GET["enable"])?:$_GET["enable"]="";
 $opt_enable_status = $_GET["enable"];
+
+$ticket_add = 1;
 #Insert new ticket to DB
 if ($ticket_opt === "add"){
     $sql="insert into unpark_tickets(ticket_number,ticket_type,linkcase) values ('".$opt_v."','".$opt_type."','".$opt_linkcase."')";
@@ -74,6 +84,7 @@ if ($ticket_opt === "updatetype"){
 }
 #Edit ticket description
 if ($ticket_opt === "editdes"){
+    isset($_GET["ticketid"])?:$_GET["ticketid"]="";
     $opt_id = intval($_GET["ticketid"]);
     $des = $_GET["des"];
     $sql="update unpark_tickets set des = '".$des."'  where id = ".$opt_id."";

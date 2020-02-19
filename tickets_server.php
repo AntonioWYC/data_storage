@@ -1,11 +1,18 @@
 <?php
     include 'connect_db.php';
     include 'response.php';
-    $ticket_opt = $_GET["opt"];
-    $opt_v = intval($_GET["q"]);
+
+    #$opt_v = intval($_GET["q"]);
+    #$ticket_opt = $_GET["opt"];
+
+    isset($_GET["type"])?:$_GET["type"]="";
     $opt_t = $_GET["type"];
+
+    isset($_GET["linkcase"])?:$_GET["linkcase"]="";
     $opt_lc = $_GET["linkcase"];
-    mysqli_select_db($conn,"ajax_demo");
+
+
+    mysqli_select_db($conn,"park_ticket");
     $sql = "";
     if ($opt_t == ""){
         $sql="SELECT * FROM unpark_tickets";
@@ -25,4 +32,4 @@
     }
     mysqli_close($conn);
     return Response::api_response(200, 'Success', $rows);
-    ?>
+

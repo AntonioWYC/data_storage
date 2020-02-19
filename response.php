@@ -82,7 +82,7 @@ class Response{
     */
     public static function json_response($code, 
         $message='', $data=array()){
-        $result = self::grant_array($code, $message, $data);
+        $result = (new Response)->grant_array($code, $message, $data);
         echo json_encode($result);
         exit;
     }
@@ -97,13 +97,13 @@ class Response{
     public static function xml_response($code, 
         $message='', $data=array()){
         
-        $result = self::grant_array($code, $message, $data);
+        $result = (new Response)->grant_array($code, $message, $data);
         
         header("Content-Type:text/xml");
         $xml = "<?xml version='1.0' encoding='UTF-8'?>\n";
-        $xml .= "<root>\n";
-        $xml .= self::xml_encode($result);
-        $xml .= "</root>";
+        $xml .= "<Document>";
+        $xml .= (new Response)->xml_encode($result);
+        $xml .= "</Document>";
         echo $xml;
         exit();
     }
