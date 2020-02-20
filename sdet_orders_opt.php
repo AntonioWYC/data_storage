@@ -18,51 +18,48 @@ function showUser(loadtype) {
         alert("Not authorization Access!")
         return
     }
-    var ticket_no = document.forms['unpark']['addTicket'].value
-    var ticket_type = document.forms['unpark']['type'].value
+    var order_no = document.forms['unpark']['addOrder'].value
+    var phone_no = document.forms['unpark']['phoneNumber'].value
     var link_case = document.forms['unpark']['linkcase'].value
+    var order_type = document.forms['unpark']['type'].value
     if (loadtype != 0){
-        if (verify_ticket(ticket_no)){
-            document.forms['unpark']['addTicket'].value = ""
-            ajax_operation("opt=add&q="+ticket_no+"&t="+ticket_type+"&lc="+link_case)
+        if (verify_order(order_no)){
+            document.forms['unpark']['addOrder'].value = ""
+            ajax_operation("opt=add&q="+order_no+"&pn="+phone_no+"&ot="+order_type+"&lc="+link_case)
         }
     }
-    ajax_operation("opt=&q=&t=")
+    ajax_operation("opt=&q=&pn=&ot=")
 }
 
 
-function verify_ticket(ticket_no=""){
-    if (ticket_no == ""){
-        alert("Please enter ticket number!")
-        return false
-    }
-    if (isNaN(ticket_no)){
-        alert("Please enter numberic ticket number!")
+function verify_order(order_no=""){
+    if (order_no == ""){
+        alert("Please enter order number!")
         return false
     }
     return true
 }
 
-function verify_ticket_type(ticket_type=""){
-    if (ticket_type == ""){
-        alert("Please enter ticket type!")
+function verify_order_type(order_type=""){
+    if (order_type == ""){
+        alert("Please enter order type!")
         return false
     }
     return true
 }
 
-function edit_ticket(id){
-    var input_element_value = document.getElementById('input_unpark_text' + id).value;
-    if (temple_edit_ticket_value == input_element_value)
+function edit_order(id){
+    var value = document.getElementById('input_order_number_text' + id).value;
+    if (temple_order_number_value == value)
         return
-    if (verify_ticket(input_element_value)){
-        ajax_operation("opt=updateticket&id="+id+"&q="+input_element_value)
+    if (verify_ticket(value)){
+        ajax_operation("opt=updateticket&id="+id+"&q="+value)
     }
 }
 
 function edit_ticket_type(id){
-    var type_element_value = document.getElementById('edit_ticket_type' + id).value;
-    if (temple_edit_ticket_type_value == type_element_value)
+    var value = document.getElementById('input_phone_number_text' + id).value;
+    if (temple_edit_ticket_type_value == value)
         return
     ajax_operation("opt=updatetype&id="+id+"&status="+type_element_value)
 }
@@ -84,29 +81,53 @@ function entry_ticket(ticketid=""){
 }
 
 function edit_text_in(id=""){
-    text_element = document.getElementById("input_unpark_text"+id)
-    text_element.style.background = "yellow";
-    temple_edit_ticket_value = text_element.value;
+    var ele = document.getElementById("input_order_number_text"+id)
+    ele.style.background = "yellow";
+    temple_order_number_value = ele.value;
 }
 
 function edit_text_out(id=""){
-    var ticket_element = document.getElementById("input_unpark_text"+id);
-    ticket_element.style.background = "";
-    if (!isNaN(id))
-        {   
-            edit_ticket(id);
-        }
+    var ele = document.getElementById("input_order_number_text"+id);
+    ele.style.background = "";
+    edit_order(id);
 }
 
-function edit_ticket_type_in(id=""){
-    text_element = document.getElementById("edit_ticket_type"+id)
-    text_element.style.background = "yellow";
+function edit_phone_number_in(id=""){
+    var ele = document.getElementById("input_phone_number_text"+id)
+    ele.style.background = "yellow";
+    temple_edit_ticket_value = ele.value;
+}
+
+function edit_phone_number_out(id=""){
+    var ele = document.getElementById("input_phone_number_text"+id);
+    ele.style.background = "";
+    // if (!isNaN(id))
+    //     {
+    //         edit_ticket(id);
+    //     }
+}
+
+// function edit_ticket_type_in(id=""){
+//     text_element = document.getElementById("edit_ticket_type"+id)
+//     text_element.style.background = "yellow";
+//     temple_edit_ticket_type_value = text_element.value;
+// }
+//
+// function edit_ticket_type_out(id=""){
+//     var ticket_element = document.getElementById("edit_ticket_type"+id);
+//     ticket_element.style.background = "";
+//     edit_ticket_type(id);
+// }
+
+function edit_link_case_in(id=""){
+    var lc_element = document.getElementById("edit_link_case" + id)
+    lc_element.style.background = "yellow";
     temple_edit_ticket_type_value = text_element.value;
 }
 
-function edit_ticket_type_out(id=""){
-    var ticket_element = document.getElementById("edit_ticket_type"+id);
-    ticket_element.style.background = "";
+function edit_link_case_out(id=""){
+    var lc_element = document.getElementById("edit_link_case"+id);
+    lc_element.style.background = "";
     edit_ticket_type(id);
 }
 
@@ -152,7 +173,7 @@ function ajax_operation(parameters){
             document.getElementById("txtHint").innerHTML = this.responseText;
         }
     };
-    xmlhttp.open("GET","add_unpark_ticket.php?"+parameters,true);
+    xmlhttp.open("GET","add_unlink_order.php?"+parameters,true);
     xmlhttp.send();
 }
 
@@ -193,8 +214,8 @@ function verify_token(parameters){
 </head>
 <body onload="showUser(0)" align='center'>
 <div class="jumbotron text-center">
-    <div><h1>Auto-Test Tickets Management</h1></div>
-    <div align="center">All Tickets are test data, used for automation scripts. Stored in in sentry DB.</div>
+    <div><h1>Auto-Test Orders Management</h1></div>
+    <div align="center">All Orders are test data, used for automation scripts. Stored in in sentry DB.</div>
 </div>
 
 <div class="container" style="margin-top:0px">
@@ -202,9 +223,11 @@ function verify_token(parameters){
     <div class="col-sm-2">
     </div>
 <div class="col-sm-4">
-    <h5><i class="material-icons" style="font-size:18px">&#xe39d;</i> Add Tickets</h5>
+    <h5><i class="material-icons" style="font-size:18px">&#xe39d;</i> Add Orders</h5>
         <form name="unpark">
-        <input type="text" name="addTicket" placeholder="Ticket ID" required>
+        <input type="text" name="addOrder" placeholder="Order ID" required>
+        <br>
+        <input type="text" name="phoneNumber" placeholder="Phone Number">
         <br>
         <input type="text" name="linkcase" placeholder="Link to case">
         <br>
@@ -213,7 +236,8 @@ function verify_token(parameters){
              <option value='c'>2 Day</option>
              <option value='a' selected>Annual Ticket</option>
              <option value='d'>GA</option>
-             <option value='e'>Other</option>
+            <option value='e'>Half Day</option>
+             <option value='f'>Other</option>
         </select>
         <input type="button" value="     Add     " onclick="showUser()" class="btn btn-outline-primary btn-sm">
         <div></div>
@@ -225,11 +249,11 @@ function verify_token(parameters){
         <ul class="nav nav-pills flex-column">
         <li class="nav-item"><a href="tickets_server.php?format=xml">View Tickets - XML</a></li>
         <li class="nav-item"><a href="tickets_server.php?format=json">View Tickets - JSON</a></li>
-    <div>
-        <label>
-            <input type="checkbox" id="enablestatus" class="form-check-input" onchange="checkboxChange(this)">Enable Ticket Status 
-        </label>
-    </div>
+<!--    <div>-->
+<!--        <label>-->
+<!--            <input type="checkbox" id="enablestatus" class="form-check-input" onchange="checkboxChange(this)">Enable Ticket Status -->
+<!--        </label>-->
+<!--    </div>-->
 </div>
 
 </div>
