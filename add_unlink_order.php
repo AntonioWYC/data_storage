@@ -40,14 +40,14 @@ isset($_GET["lc"])?:$_GET["lc"]="";
 $opt_linkcase = $_GET["lc"];
 
 
-$ticket_add = 1;
+$order_add = 1;
 #Insert new order to DB
 if ($order_opt === "add"){
     $sql="insert into orders(order_number,order_type,phone_number, linkcase) values ('".$opt_orderno."','".$opt_ordertype."','".$opt_phoneno."','".$opt_linkcase."')";
-    if ($opt_v != "0")
+    if ($opt_orderno != "0")
     {
         if (mysqli_query($conn,$sql)) {
-            echo "New record *".$opt_v."* created successfully";
+            echo "New record *".$opt_orderno."* created successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
@@ -63,12 +63,13 @@ if ($order_opt === "delete"){
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 }
-#Update order
+
+#Update order number
 if ($order_opt === "updateorder"){
     $opt_id = intval($_GET["id"]);
     $opt_orderno = $_GET["q"];
     $sql="update orders set order_number = '".$opt_orderno."'  where id = ".$opt_id."";
-    if ($ticket_add != "0")
+    if ($order_add != "0")
     {
         if (mysqli_query($conn,$sql)) {
             echo "Record updated to ".$opt_orderno." successfully";
@@ -77,26 +78,44 @@ if ($order_opt === "updateorder"){
         }
     }
 }
-if ($order_opt === "updatetype"){
+
+#Edit phone number
+if ($order_opt === "updatephone"){
     $opt_id = intval($_GET["id"]);
-    $status = $_GET["status"];
-    $sql="update orders set linkcase = '".$status."'  where id = ".$opt_id."";
-    if ($ticket_add != "0")
+    $opt_phoneno = $_GET["pn"];
+    $sql="update orders set phone_number = '".$opt_phoneno."'  where id = ".$opt_id."";
+    if ($order_add != "0")
     {
         if (mysqli_query($conn,$sql)) {
-            echo "Record updated to ".$status." successfully";
+            echo "Record updated to ".$opt_orderno." successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
     }
 }
-#Edit ticket description
+
+#Edit order link case value
+if ($order_opt === "updatelinkcase"){
+    $opt_id = intval($_GET["id"]);
+    $opt_linkcase = $_GET["lc"];
+    $sql="update orders set linkcase = '".$opt_linkcase."'  where id = ".$opt_id."";
+    if ($order_add != "0")
+    {
+        if (mysqli_query($conn,$sql)) {
+            echo "Record updated to ".$opt_linkcase." successfully";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }
+}
+
+#Edit order description
 if ($order_opt === "editdes"){
-    isset($_GET["ticketid"])?:$_GET["ticketid"]="";
-    $opt_id = intval($_GET["ticketid"]);
+    isset($_GET["id"])?:$_GET["id"]="";
+    $opt_id = intval($_GET["id"]);
     $des = $_GET["des"];
     $sql="update orders set des = '".$des."'  where id = ".$opt_id."";
-    if ($ticket_add != "0")
+    if ($order_add != "0")
     {
         if (!mysqli_query($conn,$sql)) {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -104,18 +123,18 @@ if ($order_opt === "editdes"){
     }
 }
 
-//#change ticket type
-//if ($order_opt === "changetype"){
-//    $opt_id = intval($_GET["id"]);
-//    $select_value = $_GET["select_value"];
-//    $sql="update orders set order_type = '".$select_value."'  where id = ".$opt_id."";
-//    if ($ticket_add != "0")
-//    {
-//        if (!mysqli_query($conn,$sql)) {
-//            echo "Error: " . $sql . "<br>" . $conn->error;
-//        }
-//    }
-//}
+#change order type
+if ($order_opt === "changetype"){
+    $opt_id = intval($_GET["id"]);
+    $select_value = $_GET["select_value"];
+    $sql="update orders set order_type = '".$select_value."'  where id = ".$opt_id."";
+    if ($order_add != "0")
+    {
+        if (!mysqli_query($conn,$sql)) {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }
+}
 
 //#Entry ticket
 //if ($order_opt === "entry"){

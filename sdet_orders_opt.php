@@ -23,18 +23,27 @@ function showUser(loadtype) {
     var link_case = document.forms['unpark']['linkcase'].value
     var order_type = document.forms['unpark']['type'].value
     if (loadtype != 0){
-        if (verify_order(order_no)){
+        if (verify_value_not_blank(order_no, "order number")){
             document.forms['unpark']['addOrder'].value = ""
+            document.forms['unpark']['phoneNumber'].value = ""
+            document.forms['unpark']['linkcase'].value = ""
             ajax_operation("opt=add&q="+order_no+"&pn="+phone_no+"&ot="+order_type+"&lc="+link_case)
         }
     }
     ajax_operation("opt=&q=&pn=&ot=")
 }
 
+function verify_phone_number(phone_no=""){
+    if (phone_no == ""){
+        alert("Please enter phone number!")
+        return false
+    }
+    return true
+}
 
-function verify_order(order_no=""){
-    if (order_no == ""){
-        alert("Please enter order number!")
+function verify_value_not_blank(value, msg){
+    if(value == ""){
+        alert("Please enter: " + msg + " !")
         return false
     }
     return true
@@ -52,16 +61,27 @@ function edit_order(id){
     var value = document.getElementById('input_order_number_text' + id).value;
     if (temple_order_number_value == value)
         return
-    if (verify_ticket(value)){
-        ajax_operation("opt=updateticket&id="+id+"&q="+value)
+    if (verify_value_not_blank(value, "order number")){
+        ajax_operation("opt=updateorder&id="+id+"&q="+value)
     }
 }
 
-function edit_ticket_type(id){
+function edit_phone_number(id){
     var value = document.getElementById('input_phone_number_text' + id).value;
-    if (temple_edit_ticket_type_value == value)
+    if (temple_phone_number_value == value)
         return
-    ajax_operation("opt=updatetype&id="+id+"&status="+type_element_value)
+    if (verify_phone_number(value)){
+        ajax_operation("opt=updatephone&id="+id+"&pn="+value)
+    }
+}
+
+function edit_link_case(id){
+    var value = document.getElementById('edit_link_case' + id).value;
+    if (temp_link_case_value == value)
+        return
+    if (verify_value_not_blank(value, "link case")){
+        ajax_operation("opt=updatelinkcase&id="+id+"&lc="+value)
+    }
 }
 
 function delete_ticket(id=""){
@@ -72,13 +92,13 @@ function delete_ticket(id=""){
     }
 }
 
-function entry_ticket(ticketid=""){
-    var result = confirm("Want to Entry?");
-    if (result) {
-        //Logic to delete the item
-        ajax_operation("opt=entry&ticketid="+ticketid);
-    }
-}
+// function entry_ticket(ticketid=""){
+//     var result = confirm("Want to Entry?");
+//     if (result) {
+//         //Logic to delete the item
+//         ajax_operation("opt=entry&ticketid="+ticketid);
+//     }
+// }
 
 function edit_text_in(id=""){
     var ele = document.getElementById("input_order_number_text"+id)
@@ -95,16 +115,16 @@ function edit_text_out(id=""){
 function edit_phone_number_in(id=""){
     var ele = document.getElementById("input_phone_number_text"+id)
     ele.style.background = "yellow";
-    temple_edit_ticket_value = ele.value;
+    temple_phone_number_value = ele.value;
 }
 
 function edit_phone_number_out(id=""){
     var ele = document.getElementById("input_phone_number_text"+id);
     ele.style.background = "";
-    // if (!isNaN(id))
-    //     {
-    //         edit_ticket(id);
-    //     }
+    if (!isNaN(id))
+        {
+            edit_phone_number(id);
+        }
 }
 
 // function edit_ticket_type_in(id=""){
@@ -122,13 +142,13 @@ function edit_phone_number_out(id=""){
 function edit_link_case_in(id=""){
     var lc_element = document.getElementById("edit_link_case" + id)
     lc_element.style.background = "yellow";
-    temple_edit_ticket_type_value = text_element.value;
+    temp_link_case_value = text_element.value;
 }
 
 function edit_link_case_out(id=""){
     var lc_element = document.getElementById("edit_link_case"+id);
     lc_element.style.background = "";
-    edit_ticket_type(id);
+    edit_link_case(id);
 }
 
 function edit_textfield_in(id=""){
@@ -140,13 +160,14 @@ function edit_textfield_out(id="",optid=''){
     if (!isNaN(optid))
         {   
             var des = document.getElementById(id).value;
-            ajax_operation("opt=editdes&ticketid="+optid+"&des="+des);
+            ajax_operation("opt=editdes&id="+optid+"&des="+des);
         }
 }
 
+//Edit order type
 function change_type(id=""){
-        select_element = document.getElementById("type"+id).value;
-        ajax_operation("opt=changetype&id="+id+"&select_value="+select_element);
+    select_element = document.getElementById("type"+id).value;
+    ajax_operation("opt=changetype&id="+id+"&select_value="+select_element);
 
 }
 
@@ -213,7 +234,7 @@ function verify_token(parameters){
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body onload="showUser(0)" align='center'>
-<div class="jumbotron text-center">
+<div class="jumbotron text-center" style="background-color: #D1EEEE">
     <div><h1>Auto-Test Orders Management</h1></div>
     <div align="center">All Orders are test data, used for automation scripts. Stored in in sentry DB.</div>
 </div>
@@ -225,7 +246,7 @@ function verify_token(parameters){
 <div class="col-sm-4">
     <h5><i class="material-icons" style="font-size:18px">&#xe39d;</i> Add Orders</h5>
         <form name="unpark">
-        <input type="text" name="addOrder" placeholder="Order ID" required>
+        <input type="text" name="addOrder" placeholder="Order Number" required>
         <br>
         <input type="text" name="phoneNumber" placeholder="Phone Number">
         <br>
@@ -247,8 +268,8 @@ function verify_token(parameters){
 <div class="col-sm-4">
     <h5><i class='fab fa-leanpub'></i> Related Links</h5>
         <ul class="nav nav-pills flex-column">
-        <li class="nav-item"><a href="tickets_server.php?format=xml">View Tickets - XML</a></li>
-        <li class="nav-item"><a href="tickets_server.php?format=json">View Tickets - JSON</a></li>
+        <li class="nav-item"><a href="orders_server.php?format=xml">View Orders - XML</a></li>
+        <li class="nav-item"><a href="orders_server.php?format=json">View Orders - JSON</a></li>
 <!--    <div>-->
 <!--        <label>-->
 <!--            <input type="checkbox" id="enablestatus" class="form-check-input" onchange="checkboxChange(this)">Enable Ticket Status -->
@@ -258,7 +279,7 @@ function verify_token(parameters){
 
 </div>
 <div id="txtHint" align='center'><b></b></div>
-<div class="jumbotron text-center" style="margin-bottom:0">
+<div class="jumbotron text-center" style="margin-bottom:0; background-color: #D1EEEE">
   <p>Sentry Studio Deserved</p>
 </div>
 <script>
